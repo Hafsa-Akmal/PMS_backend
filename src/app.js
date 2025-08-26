@@ -8,7 +8,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-import cors from 'cors';
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN,
@@ -29,4 +28,5 @@ app.use('/api/products', productRoutes);
   await sequelize.sync({ alter: true }); 
 })();
 
+console.log('CORS_ORIGIN:', process.env.CORS_ORIGIN);
 module.exports = app;
