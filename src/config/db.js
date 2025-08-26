@@ -1,6 +1,9 @@
 const { Sequelize } = require('sequelize');
-const dotenv = require('dotenv');
-dotenv.config();
+
+// Load env only locally
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 console.log("🚨 DATABASE_URL at runtime:", process.env.DATABASE_URL);
 
@@ -11,7 +14,7 @@ const sequelize = process.env.DATABASE_URL
       dialectOptions: {
         ssl: {
           require: true,
-          rejectUnauthorized: false, // for self-signed certs; adjust as needed
+          rejectUnauthorized: false,
         },
       },
       logging: false,
