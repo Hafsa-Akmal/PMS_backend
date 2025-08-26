@@ -13,18 +13,15 @@ app.use(cors({
 
 const { sequelize } = require('./models');
 
-// routes
+
 const authRoutes = require('./routes/auth.routes');
 const productRoutes = require('./routes/product.routes');
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 
-// for testing
-app.get('/api/health', (req, res) => res.json({ ok: true }));
 
-// init db
 (async () => {
-  await sequelize.sync({ alter: true }); // dev only; replace with migrations in prod
+  await sequelize.sync({ alter: true }); 
 })();
 
 module.exports = app;
