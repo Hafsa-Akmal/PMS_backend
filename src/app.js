@@ -13,7 +13,10 @@ app.use(cors({
   origin: process.env.CORS_ORIGIN || 'https://pms-frontend-jclm.vercel.app',
   credentials: true
 }));
-
+// app.use(cors({
+//   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+//   credentials: true
+// }));  
 const { sequelize } = require('./models');
 
 
