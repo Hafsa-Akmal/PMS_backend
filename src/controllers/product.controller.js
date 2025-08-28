@@ -68,7 +68,6 @@ exports.createProduct = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 exports.getProducts = async (req, res) => {
   try {
     let {
@@ -95,14 +94,23 @@ exports.getProducts = async (req, res) => {
     }
 
     if (search) {
-      const like = { [Op.iLike]: `%${search}%` }; 
+      const like = { [Op.iLike]: `%${search}%` };
       where[Op.or] = [{ name: like }, { description: like }];
     }
 
     const order =
       sort === 'newest' ? [['createdAt', 'DESC']] : [['createdAt', 'ASC']];
 
-    const { rows, count } = await Product.findAndCountAll({
+    // First get the count to calculate totalPages
+    const count = await Product.count({ where });
+
+    let totalPages = Math.ceil(count / limit) || 1;
+
+    // ✅ Clamp page so it never exceeds totalPages
+    if (page > totalPages) page = totalPages;
+    if (page < 1) page = 1;
+
+    const { rows } = await Product.findAndCountAll({
       where,
       include: [Category, ProductImage],
       order,
@@ -114,8 +122,8 @@ exports.getProducts = async (req, res) => {
       data: rows,
       page,
       total: count,
-      totalPages: Math.ceil(count / limit),
-      hasNext: page * limit < count,
+      totalPages,
+      hasNext: page < totalPages,
     });
   } catch (e) {
     res.status(500).json({ message: 'Server error' });
