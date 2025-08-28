@@ -114,7 +114,7 @@ exports.getProducts = async (req, res) => {
       data: rows,
       page,
       total: count,
-      totalPages: Math.ceil(count / limit),
+      totalPages: Math.floor(count / limit),
       hasNext: page * limit < count,
     });
   } catch (e) {
